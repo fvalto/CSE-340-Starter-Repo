@@ -48,7 +48,7 @@ nav ul {
   position: absolute;
   top: 0px;
   left: 20px;
-  background-color: rgba(212, 230, 236, 0.8);
+  background-color: #d4e6eccc;
   padding: 5px;
   border-radius: 10px;
   color: #333;
@@ -101,6 +101,95 @@ nav ul {
   margin-top: 10px;
 }
 
+#inv-display {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  list-style-type: none;
+  padding: 0;
+}
+
+#inv-display li {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+#inv-display li img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+#inv-display .namePrice {
+  text-align: center;
+  padding: 10px 0;
+}
+
+#inv-display .namePrice h2 {
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: bold;
+}
+
+#inv-display .namePrice span {
+  display: block;
+  font-size: 1.5rem;
+  color: darkgreen;
+  margin-top: 5px;
+}
+
+#inv-display li:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px black;
+}
+
+#car-details {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px darkgray;
+  padding: 20px;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+#car-details h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+#car-details .car-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+#car-details .car-info {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+#car-details .car-info p {
+  margin-bottom: 10px;
+}
+
+/* Price Styling */
+#car-details .car-info p strong {
+  color: midnightblue;
+}
+
 footer {
   text-align: center;
 }
@@ -108,6 +197,19 @@ footer {
 @media only screen and (min-width: 650px) {
   .image-container {
     margin-left: 15%;
+  }
+
+  #inv-display li {
+    width: calc(50% - 20px);
+  }
+
+  #car-details {
+    padding: 25px;
+    max-width: 750px;
+  }
+
+  #car-details h2 {
+    font-size: 1.7rem;
   }
 }
 
@@ -174,5 +276,32 @@ footer {
 
   .upgrade-card {
     height: 80%;
+  }
+
+  #inv-display li {
+    width: calc(33.33% - 20px);
+  }
+
+  #car-details {
+    flex-direction: row;
+    padding: 30px;
+    max-width: 900px;
+  }
+
+  #car-details .car-image {
+    width: 50%;
+    margin-right: 30px;
+  }
+
+  #car-details .car-info {
+    width: 50%;
+  }
+
+  #car-details h2 {
+    font-size: 1.8rem;
+  }
+
+  #car-details .car-info {
+    font-size: 1.1rem;
   }
 }
