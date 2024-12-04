@@ -1,4 +1,3 @@
-/******* Change Box Model ***************/
 *,
 *:before,
 *:after {
@@ -26,12 +25,26 @@ nav {
   width: 100%;
 }
 
+a {
+  text-decoration: none;
+  color: midnightblue;
+  cursor: pointer;
+}
+
+nav a {
+  color: white;
+}
+
+nav a:hover {
+  color: cyan;
+}
+
 nav ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  display: flex;  /* Flexbox makes the list items horizontal */
-  justify-content: space-evenly; /* Distribute space evenly between items */
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .image-container {
@@ -188,6 +201,64 @@ nav ul {
 /* Price Styling */
 #car-details .car-info p strong {
   color: midnightblue;
+}
+
+.form {
+  background: #ffffff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333333;
+}
+
+.form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form button {
+  width: 100%;
+  padding: 10px;
+  background-color: midnightblue;
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.form button:hover {
+  background-color: lightskyblue;
+  border: 2px solid black;
+  color: black;
+}
+
+.form p {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #666666;
+}
+
+.form a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.form a:hover {
+  text-decoration: underline;
 }
 
 footer {

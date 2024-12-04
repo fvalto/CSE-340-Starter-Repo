@@ -84,6 +84,44 @@ Util.buildCarCard = async function(data) {
   return carCard
 }
 
+/* **************************************
+* Build the Login
+* ************************************ */
+Util.buildLoginForm = async function () {
+  let loginForm = "";
+
+  loginForm += '<form action="/account/login" method="POST">';
+  loginForm += `<div class="form">`;
+  loginForm += `<label for="email">Email Address<input type="email" name="email" id="email" required placeholder="Enter your email"></label>`;
+  loginForm += `<label for="password">Password<input type="password" name="password" id="password" required placeholder="Enter your password"></label>`;
+  loginForm += `<button type="submit" class="submit-btn">Login</button>`;
+  loginForm += `</div>`;
+  loginForm += `</form>`;
+  loginForm += `<p>Don't have an account? <a href="/account/register">Register here</a></p>`;
+
+  return loginForm;
+};
+
+/* **************************************
+* Build the Register
+* ************************************ */
+Util.buildRegisterForm = async function () {
+  let registerForm = "";
+
+  registerForm += '<form id="registerForm" action="/account/register" method="post">';
+  registerForm += `<div class="form">`;
+  registerForm += `<label for="account_firstname">First Name<input type="text" name="account_firstname" id="account_firstname" required placeholder="Enter your first name"></label>`;
+  registerForm += `<label for="account_lastname">Last Name<input type="text" name="account_lastname" id="account_lastname" required placeholder="Enter your last name"></label>`;
+  registerForm += `<label for="account_email">Email Address<input type="email" name="account_email" id="account_email" required placeholder="Enter your email"></label>`;
+  registerForm += `<label for="account_password">Password<input type="password" name="account_password" id="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" placeholder="Enter a strong password">`;
+  registerForm += `<span>Passwords must be at least 12 characters and contain at least 1 number, 1 capital letter and 1 special character</span></label>`;
+  registerForm += `<button type="submit" class="submit-btn">Register</button>`;
+  registerForm += `</div>`;
+  registerForm += `</form>`;
+
+  return registerForm;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
