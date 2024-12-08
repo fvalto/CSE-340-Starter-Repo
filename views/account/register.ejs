@@ -14,4 +14,21 @@
     </ul>
 <% } %>
 
-<%- register %>
+<form id="registerForm" action="/account/register" method="post">
+    <div class="form">
+        <label for="account_firstname">First Name
+            <input type="text" name="account_firstname" id="account_firstname" required placeholder="Enter your first name" value="<%= locals.account_firstname %>">
+        </label>
+        <label for="account_lastname">Last Name
+            <input type="text" name="account_lastname" id="account_lastname" required placeholder="Enter your last name" value="<%= locals.account_lastname %>">
+        </label>
+        <label for="account_email">Email Address
+            <input type="email" name="account_email" id="account_email" required placeholder="Enter your email" value="<%= locals.account_email %>">
+        </label>
+        <label for="account_password">Password
+            <input type="password" name="account_password" id="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" placeholder="Enter a strong password">
+            <span>Passwords must be at least 12 characters and contain at least 1 number, 1 capital letter and 1 special character</span>
+        </label>
+        <button type="submit" class="submit-btn">Register</button>
+    </div>
+</form>
