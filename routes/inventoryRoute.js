@@ -29,9 +29,26 @@ router.get("/add-inventory", utilities.handleErrors(invController.showAddInvento
 
 router.post(
   "/add-inventory",
-  invValidate.inventoryRules(),
+  utilities.handleErrors(invValidate.inventoryRules()),
   invValidate.checkInventoryData,
   utilities.handleErrors(invController.addInventory)
 );
+
+router.get(
+  "/getInventory/:classification_id", 
+  utilities.checkLogin,
+  utilities.handleErrors(invController.getInventoryJSON)
+);
+
+router.get(
+  "/edit/:inv_id",
+  utilities.checkLogin,
+  utilities.handleErrors(invController.editInventoryView)
+);
+
+router.post(
+  "/edit-inventory/",
+  utilities.handleErrors(invController.updateInventory)
+)
 
 module.exports = router;

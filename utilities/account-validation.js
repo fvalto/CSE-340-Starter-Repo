@@ -105,4 +105,48 @@ validate.checkInventoryData = async (req, res, next) => {
   next();
 };
 
+/*  **********************************
+  *  Login Data Validation Rules
+  * ********************************* */
+validate.loginRules = () => {
+  return [
+    body("account_email")
+      .trim()
+      .isEmail()
+      .normalizeEmail()
+      .withMessage("A valid email is required.")
+      /*.custom(async (account_email) => {
+        const emailExists = await accountModel.getAccountByEmail(account_email)
+        if (emailExists){
+          throw new Error("Please log in or use different email")
+        }
+      })*/,
+      
+    body("account_password")
+      .trim()
+      .notEmpty()
+      .withMessage("Password is required.")
+  ]
+}
+
+/* ******************************
+ * Check data and return errors or continue to Login
+ * ***************************** */
+validate.checkLoginData = async (req, res, next) => {
+  const { account_email } = req.body
+  let errors = []
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("account/login", {
+      errors,
+      title: "Login",
+      nav,
+      account_email,
+    })
+    return
+  }
+  next()
+}
+
 module.exports = validate

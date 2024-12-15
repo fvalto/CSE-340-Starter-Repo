@@ -1,6 +1,7 @@
 const { body, validationResult } = require("express-validator")
 const utilities = require("../utilities/index")
 const invValidate = {}
+const invModel = require("../models/inventory-model")
 
 /* ******************************
  *  Classification Data Validation Rules
@@ -73,5 +74,28 @@ invValidate.checkData = async (req, res, next) => {
     }
     next();
   };
+
+    /* ******************************
+   *  Errors will be directed back to the edit view
+   * ****************************** */
+    invValidate.checkUpdateData = async (req, res, next) => {
+      const errors = validationResult(req);
+      const inv_id = parseInt(req.params.inv_id)
+      const itemData = await invModel.getCarDetails(inv_id)
+      const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+      if (!errors.isEmpty()) {
+        const classificationList = await utilities.buildClassificationList(req.body.classification_id);
+        const nav = await utilities.getNav();
+        return res.status(400).render("inventory/edit-inventory", {
+          title: "Edit " + itemName,
+          nav,
+          classificationList,
+          errors,
+          inv_id,
+          ...req.body,
+        });
+      }
+      next();
+    };
 
   module.exports = invValidate;
