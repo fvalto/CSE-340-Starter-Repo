@@ -5,12 +5,10 @@
     } %>
     
     <%- messages() %>
-    
-    <h1><%= title %></h1>
 
-    <!-- Account Update Form -->
     <div class="form">
     <section>
+      <h2>Change Account Information</h2>
       <form action="/account/update-account" method="POST">
         <label for="account_firstname">First Name:</label>
         <input type="text" id="account_firstname" name="account_firstname" value="<%= accountData.account_firstname %>" required>
@@ -25,7 +23,6 @@
       </form>
     </section>
     
-    <!-- Change Password Form -->
     <section>
       <h2>Change Password</h2>
       <form action="/account/update-password" method="POST">
@@ -42,4 +39,3 @@
       </form>
     </section>
   </div>
-  </main>
