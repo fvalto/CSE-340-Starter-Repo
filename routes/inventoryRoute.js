@@ -16,39 +16,63 @@ router.get('/:trigger-error', invController.triggerError);
 router.get('/', invController.showManagement);
 
 // Add Clasification
-router.get('/add-classification', invController.showAddClassification);
+router.get(
+  '/add-classification',
+  utilities.checkAccountType,
+  invController.showAddClassification
+
+);
 
 router.post('/add-classification', 
   invValidate.classificationRules(),
   invValidate.checkData,
+  utilities.checkAccountType,
   invController.addClassification
 )
 
 // Add Inventory
-router.get("/add-inventory", utilities.handleErrors(invController.showAddInventory));
+router.get(
+  "/add-inventory",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.showAddInventory)
+);
 
 router.post(
   "/add-inventory",
   utilities.handleErrors(invValidate.inventoryRules()),
   invValidate.checkInventoryData,
+  utilities.checkAccountType,
   utilities.handleErrors(invController.addInventory)
 );
 
 router.get(
-  "/getInventory/:classification_id", 
-  utilities.checkLogin,
+  "/getInventory/:classification_id",
+  utilities.checkAccountType,
   utilities.handleErrors(invController.getInventoryJSON)
 );
 
 router.get(
   "/edit/:inv_id",
-  utilities.checkLogin,
+  utilities.checkAccountType,
   utilities.handleErrors(invController.editInventoryView)
 );
 
 router.post(
   "/edit-inventory/",
+  utilities.checkAccountType,
   utilities.handleErrors(invController.updateInventory)
+)
+
+router.get(
+  "/delete/:inv_id",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.deleteInventoryView)
+);
+
+router.post(
+  "/delete-inventory/",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.deleteInventory)
 )
 
 module.exports = router;

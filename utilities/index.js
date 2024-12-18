@@ -167,7 +167,8 @@ Util.checkJWTToken = (req, res, next) => {
      next()
     })
   } else {
-   next()
+    res.locals.loggedin = 0
+    next()
   }
  }
 
@@ -182,5 +183,33 @@ Util.checkJWTToken = (req, res, next) => {
     return res.redirect("/account/login")
   }
  }
+
+  /* ****************************************
+ *  Check Account Type
+ * ************************************ */
+ Util.checkAccountType = (req, res, next) => {
+  if (req.cookies.jwt) {
+    jwt.verify(
+     req.cookies.jwt,
+     process.env.ACCESS_TOKEN_SECRET,
+     function (err, accountData) {
+      if (err) {
+       req.flash("Please log in")
+       res.clearCookie("jwt")
+       return res.redirect("/account/login")
+      }
+
+      if (["Admin", "Employee"].includes(accountData.account_type)) {
+        next();
+      } else {
+        req.flash("notice", "You do not have the proper permissions to access this page.");
+        return res.redirect("/account/login");
+      }
+    });
+  } else {
+    req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
+  }
+};
 
 module.exports = Util

@@ -28,6 +28,18 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 )
 
+router.get(
+  "/account-management",
+  utilities.handleErrors(accountController.manageAccountView)
+);
+
+// Logout
+router.get(
+  '/logout',
+  utilities.checkJWTToken,
+  utilities.handleErrors(accountController.logout)
+);
+
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildManagement))
 
 module.exports = router;

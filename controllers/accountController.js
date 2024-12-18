@@ -93,6 +93,7 @@ async function accountLogin(req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
   const accountData = await accountModel.getAccountByEmail(account_email)
+  console.log("Account Data from DB:", accountData);
   if (!accountData) {
     req.flash("notice", "Please check your credentials and try again.")
     res.status(400).render("account/login", {
@@ -133,5 +134,38 @@ async function accountLogin(req, res) {
   }
 }
   
-module.exports = { buildLogin, buildRegister, registerAccount, buildManagement, accountLogin }
+async function manageAccountView(req, res) {
+  try {
+    let nav = await utilities.getNav();
+
+    // Assuming user account data is stored in res.locals from middleware like `checkJWTToken`
+    const { accountData } = res.locals;
+
+    if (!accountData) {
+      req.flash("notice", "Account not found. Please log in again.");
+      return res.redirect("/account/login");
+    }
+
+    res.render("account/account-management", {
+      title: "Manage Account",
+      nav,
+      errors: null, // Placeholder for error messages
+      firstName: accountData.firstName,
+      lastName: accountData.lastName,
+      email: accountData.account_email,
+    });
+  } catch (error) {
+    console.error("Error rendering account management view:", error);
+    req.flash("notice", "An unexpected error occurred.");
+    return res.redirect("/account/login");
+  }
+}
+
+const logout = (req, res) => {
+  res.clearCookie('jwt');
+  req.flash('notice', 'You have successfully logged out.');
+  res.redirect('/');
+};
+
+module.exports = { buildLogin, buildRegister, registerAccount, buildManagement, accountLogin, manageAccountView, logout }
   
