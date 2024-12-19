@@ -35,10 +35,7 @@ invCont.showInventoryItemDetail = async function (req, res, next) {
   const carMake = data.inv_make
   const carModel = data.inv_model
   const reviews = await reviewModel.getReviewsByInventoryId(invId)
-  if (req.session.account_id) {
-    accountData = await accountModel.getAccountById(req.session.account_id); // Fetch account details
-    console.log("Account Data:", accountData);
-  }
+  const accountData = await accountModel.getAccountById(req.session.account_id);
 
 
   res.render("./inventory/carDetails", {
