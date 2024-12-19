@@ -22,7 +22,7 @@ async function addReview(req, res) {
     } catch (error) {
       console.error("Error adding review:", error);
       req.flash("notice", "An error occurred while adding the review.");
-      res.redirect("back");
+      res.redirect("/inv/detail/${inv_id}");
     }
   };
 
@@ -47,47 +47,106 @@ async function getReviewsForInventory(req, res) {
  * ************************** */
 async function getReviewsForAccount(req, res) {
     const account_id = res.locals.accountData.account_id;
+    let nav = await utilities.getNav()
+    const reviews = await reviewModel.getReviewsByAccountId(account_id);
     try {
-        const reviews = await reviewModel.getReviewsByAccountId(account_id);
         res.locals.reviews = reviews;
+        res.render('review/edit', {
+            title: 'Edit Review',
+            nav,
+            reviews,
+            errors: null,
+          });
         next();
     } catch (error) {
         console.error("getReviewsForAccount Error: ", error);
         req.flash("error", "Failed to load your reviews.");
         next();
     }
-}
+};
 
 /* ***************************
- * Update a review
+ * Update a review view
  * ************************** */
-async function updateReview(req, res) {
-    const { review_id, review_text } = req.body;
+async function editReviewView(req, res) {
     try {
-        const review = await reviewModel.updateReview(review_id, review_text);
-        req.flash("notice", "Review updated successfully.");
-        res.redirect("/account/account-management");
+        const account_id = res.locals.accountData.account_id;
+        const review = await reviewModel.getReviewsByAccountId(account_id);
+        const reviewId = review.review_id;
+        const reviews = await reviewModel.getReviewById(reviewId);
+  
+        res.render('review/edit', {
+            title: 'Edit Review',
+            reviews,
+        });
     } catch (error) {
-        console.error("updateReview Error: ", error);
-        req.flash("error", "Failed to update review. Please try again.");
-        res.redirect("/account/account-management");
+        console.error("Error fetching review:", error);
+        req.flash("error", "Error loading the review.");
+        res.redirect('/account/account-info');
     }
-}
+};
+
+
+async function editReview(req, res) {
+    try {
+      const reviewId = req.params.reviewId;
+      const { review_text } = req.body;
+  
+      const result = await reviewModel.updateReview(reviewId, review_text);
+  
+      if (result) {
+        req.flash('success', 'Review updated successfully');
+        res.redirect(`/account/account-info`);
+      } else {
+        req.flash('error', 'Error updating review');
+        res.redirect(`/account/account-info`);
+      }
+    } catch (error) {
+      console.error("Error updating review:", error);
+      req.flash("error", "Error updating review.");
+      res.redirect(`/account/account-info`);
+    }
+};
 
 /* ***************************
- * Delete a review
+ * Delete a review View
+ * ************************** */
+async function deleteReviewView(req, res) {
+    try {
+      const reviewId = req.params.reviewId;
+      const review = await reviewModel.getReviewById(reviewId);
+  
+      res.render('review/delete', {
+        title: 'Delete Review',
+        review,
+      });
+    } catch (error) {
+      console.error("Error fetching review:", error);
+      req.flash("error", "Error loading the review.");
+      res.redirect('/account/account-info');
+    }
+};
+
+/* ***************************
+ * Delete review
  * ************************** */
 async function deleteReview(req, res) {
-    const { review_id } = req.body;
     try {
-        const review = await reviewModel.deleteReview(review_id);
-        req.flash("notice", "Review deleted successfully.");
-        res.redirect("/account/account-management");
+      const reviewId = req.params.reviewId;
+      const result = await reviewModel.deleteReview(reviewId);
+  
+      if (result) {
+        req.flash('success', 'Review deleted successfully');
+        res.redirect(`/account/account-info`);
+      } else {
+        req.flash('error', 'Error deleting review');
+        res.redirect(`/account/account-info`);
+      }
     } catch (error) {
-        console.error("deleteReview Error: ", error);
-        req.flash("error", "Failed to delete review. Please try again.");
-        res.redirect("/account/account-management");
+      console.error("Error deleting review:", error);
+      req.flash("error", "Error deleting review.");
+      res.redirect(`/account/account-info`);
     }
-}
+};
 
-module.exports = { addReview, getReviewsForInventory, getReviewsForAccount, updateReview, deleteReview };
+module.exports = { addReview, getReviewsForInventory, getReviewsForAccount, editReviewView, editReview, deleteReviewView, deleteReview };

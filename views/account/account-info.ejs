@@ -1,0 +1,33 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+  <% } else {
+      res.redirect('/')
+  } %>
+
+<%- messages() %>
+
+<a href="/account/account-management" title="Go to Account Management">Go to Account Management</a>
+
+<div class="review-list">
+  <h2>My reviews</h2>
+  <% if (reviews && reviews.length > 0) { %>
+    <ul>
+      <% reviews.forEach(review => { %>
+        <li class="review-item">
+          <p><strong class="reviewer_name"><%= review.reviewer_name %></strong> - <%= new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date(review.review_date)) %></p>
+          <p><%= review.review_text %></p>
+
+          <div class="review-actions">
+            <a href="/review/edit/<%= review.review_id %>" title="Edit Review">Edit</a>
+            <form action="/review/delete/<%= review.review_id %>" method="POST" style="display:inline;">
+              <button type="submit" title="Delete Review">Delete</button>
+            </form>
+          </div>
+        </li>
+      <% }); %>
+    </ul>
+  <% } else { %>
+    <p>No reviews to display.</p>
+  <% } %>
+
+</div>

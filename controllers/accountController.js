@@ -1,5 +1,6 @@
 const utilities = require("../utilities/")
 const accountModel = require("../models/account-model")
+const reviewModel = require("../models/review-model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
@@ -155,7 +156,7 @@ async function manageAccountView(req, res) {
     req.flash("notice", "An unexpected error occurred.");
     return res.redirect("/account/login");
   }
-}
+};
 
 const logout = (req, res) => {
   res.clearCookie('jwt');
@@ -163,5 +164,24 @@ const logout = (req, res) => {
   res.redirect('/');
 };
 
-module.exports = { buildLogin, buildRegister, registerAccount, buildManagement, accountLogin, manageAccountView, logout }
+async function getUserReviews(req, res) {
+  try {
+    const accountId = req.session.account_id;
+    const reviews = await reviewModel.getReviewsByAccountId(accountId);
+    let nav = await utilities.getNav()
+
+    res.render('account/account-info', {
+      title: 'Account Information',
+      nav,
+      reviews,
+      errors: null,
+    });
+  } catch (error) {
+    console.error("Error fetching user reviews:", error);
+    req.flash("error", "Error loading your reviews.");
+    res.redirect('/account/account-info');
+  }
+};
+
+module.exports = { buildLogin, buildRegister, registerAccount, buildManagement, accountLogin, manageAccountView, logout, getUserReviews }
   

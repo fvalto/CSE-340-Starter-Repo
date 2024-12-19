@@ -23,7 +23,7 @@ async function addReview(reviewText, invId, accountId, reviewerName) {
 async function getReviewsByInventoryId(invId) {
     try {
         const sql = `
-            SELECT r.review_text, r.review_date, r.reviewer_name, a.account_firstname, a.account_lastname
+            SELECT r.review_id, r.review_text, r.review_date, r.reviewer_name, a.account_firstname, a.account_lastname
             FROM public.review r
             JOIN public.account a ON r.account_id = a.account_id
             WHERE r.inv_id = $1
@@ -42,12 +42,27 @@ async function getReviewsByInventoryId(invId) {
 async function getReviewsByAccountId(accountId) {
     try {
         const sql = `
-            SELECT r.review_id, r.review_text, r.review_date, i.inv_make, i.inv_model
-            FROM public.review r
-            JOIN public.inventory i ON r.inv_id = i.inv_id
-            WHERE r.account_id = $1
-            ORDER BY r.review_date DESC;`;
+            SELECT account_id, review_id, reviewer_name, review_text, review_date
+            FROM public.review
+            WHERE account_id = $1`;
         const data = await pool.query(sql, [accountId]);
+        return data.rows;
+    } catch (error) {
+        console.error("getReviewsByAccountId Error: ", error);
+        throw new Error("Database Error: Unable to fetch reviews");
+    }
+}
+
+/* ***************************
+ *  Get all reviews written by accountId (for accoun management view)
+ * ************************** */
+async function getReviewById(review_id) {
+    try {
+        const sql = `
+            SELECT account_id, review_id, reviewer_name, review_text, review_date
+            FROM public.review
+            WHERE review_id = $1`;
+        const data = await pool.query(sql, [review_id]);
         return data.rows;
     } catch (error) {
         console.error("getReviewsByAccountId Error: ", error);
@@ -88,4 +103,4 @@ async function deleteReview(reviewId) {
     }
 }
 
-module.exports = { addReview, getReviewsByInventoryId, getReviewsByAccountId, updateReview, deleteReview };
+module.exports = { addReview, getReviewsByInventoryId, getReviewsByAccountId, updateReview, deleteReview, getReviewById };

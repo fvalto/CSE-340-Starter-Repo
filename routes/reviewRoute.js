@@ -10,18 +10,12 @@ router.post(
     utilities.handleErrors(reviewController.addReview)
 );
 
-// Route to update an existing review
-router.post(
-    "/update",
-    utilities.checkJWTToken,
-    utilities.handleErrors(reviewController.updateReview)
-);
+// Route for editing a review
+router.get('/edit/:reviewId', reviewController.editReviewView);
+router.post('/edit-review', reviewController.editReview);
 
-// Route to delete a review
-router.post(
-    "/delete",
-    utilities.checkJWTToken,
-    utilities.handleErrors(reviewController.deleteReview)
-);
+// Route for deleting a review
+router.get('/delete/:reviewId', reviewController.deleteReviewView);
+router.post('/delete-review', reviewController.deleteReview);
 
 module.exports = router;
