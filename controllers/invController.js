@@ -1,5 +1,7 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
+const reviewModel = require("../models/review-model");
+const accountModel = require("../models/account-model")
 
 const invCont = {}
 const detailCont = {}
@@ -32,11 +34,20 @@ invCont.showInventoryItemDetail = async function (req, res, next) {
   const carYear = data.inv_year
   const carMake = data.inv_make
   const carModel = data.inv_model
+  const reviews = await reviewModel.getReviewsByInventoryId(invId)
+  if (req.session.account_id) {
+    accountData = await accountModel.getAccountById(req.session.account_id); // Fetch account details
+    console.log("Account Data:", accountData);
+  }
+
 
   res.render("./inventory/carDetails", {
     title: `${carYear} ${carMake} ${carModel}`,
     nav,
+    data,
     div,
+    reviews,
+    accountData,
     errors: null
   })
 }

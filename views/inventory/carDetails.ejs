@@ -1,9 +1,42 @@
 <% if (title) { %>
-<h1><%= title %></h1>
+  <h1><%= title %></h1>
 <% } else {
-    res.redirect('/')
+  res.redirect('/')
 } %>
 
 <%# messages() %>
 
 <%- div %>
+
+<div class="form">
+<section>
+  <h2>Reviews</h2>
+
+  <% if (reviews && reviews.length > 0) { %>
+    <ul>
+      <ul class="review-list">
+        <% reviews.forEach(review => { %>
+          <li class="review-item">
+            <p><strong class="reviewer_name"><%= review.reviewer_name %></strong> wrote on <%= new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date(review.review_date)) %>:</p>
+            <p><%= review.review_text %></p>
+          </li>
+        <% }); %>
+      </ul>
+  <% } else { %>
+    <p>No reviews for this vehicle yet. Be the first to write one!</p>
+  <% } %>
+
+  <% if (locals.loggedin) { %>
+    <h3>Leave your own review!</h3>
+    <form action="/review/add" method="POST">
+      <input type="text" name="reviewer_name" id="reviewer_name" value="<%= accountData.account_firstname[0] + accountData.account_lastname %>" readonly required/>
+      <textarea name="review_text" id="review_text" rows="5" cols="40" placeholder="Write your review here" required></textarea>
+      <input type="hidden" name="inv_id" value="<%= data.inv_id %>">
+      <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+      <button type="submit">Submit Review</button>
+    </form>
+  <% } else { %>
+    <p><a href="/account/login">Log in</a> to write a review.</p>
+  <% } %>
+</section>
+</div>

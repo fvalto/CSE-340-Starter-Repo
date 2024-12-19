@@ -17,6 +17,7 @@ const session = require("express-session")
 const pool = require('./database/')
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
+const reviewRoute = require("./routes/reviewRoute");
 
 /* ***********************
  * View Engine and Templates
@@ -62,6 +63,8 @@ app.get("/", utilities.handleErrors(baseController.buildHome))
 app.use("/inv", inventoryRoute)
 // Account route
 app.use("/account", require("./routes/accountRoute"))
+// Review route
+app.use("/review", reviewRoute);
 
 // File Not Found Route - must be last route in list
 app.use((req, res, next) => {

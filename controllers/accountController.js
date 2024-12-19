@@ -38,7 +38,6 @@ async function registerAccount(req, res) {
   // Hash the password before storing
   let hashedPassword
   try {
-    // regular password and cost (salt is generated automatically)
     hashedPassword = await bcrypt.hashSync(account_password, 10)
   } catch (error) {
     req.flash("notice", 'Sorry, there was an error processing the registration.')
@@ -93,7 +92,6 @@ async function accountLogin(req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
   const accountData = await accountModel.getAccountByEmail(account_email)
-  console.log("Account Data from DB:", accountData);
   if (!accountData) {
     req.flash("notice", "Please check your credentials and try again.")
     res.status(400).render("account/login", {
@@ -106,6 +104,7 @@ async function accountLogin(req, res) {
   }
   try {
     if (await bcrypt.compare(account_password, accountData.account_password)) {
+      req.session.account_id = accountData.account_id
       delete accountData.account_password
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
       if(process.env.NODE_ENV === 'development') {
@@ -113,7 +112,6 @@ async function accountLogin(req, res) {
       } else {
         res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
       }
-      // return res.redirect("/account/")
       res.status(200).render("account/loggedIn", {
         title: "Welcome",
         nav,
@@ -137,8 +135,6 @@ async function accountLogin(req, res) {
 async function manageAccountView(req, res) {
   try {
     let nav = await utilities.getNav();
-
-    // Assuming user account data is stored in res.locals from middleware like `checkJWTToken`
     const { accountData } = res.locals;
 
     if (!accountData) {
@@ -149,7 +145,7 @@ async function manageAccountView(req, res) {
     res.render("account/account-management", {
       title: "Manage Account",
       nav,
-      errors: null, // Placeholder for error messages
+      errors: null,
       firstName: accountData.firstName,
       lastName: accountData.lastName,
       email: accountData.account_email,
